@@ -8,12 +8,13 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<groupId>com.monoxer.private</groupId>
 	<artifactId>mariaDB4j</artifactId>
     <name>mariaDB4j (all-in-one artifact)</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>com.monoxer.private</groupId>
 			<artifactId>mariaDB4j-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -32,6 +33,11 @@
 			<groupId>ch.vorburger.mariaDB4j</groupId>
 			<artifactId>mariaDB4j-db-mac64</artifactId>
 			<version>10.2.11</version>
+		</dependency>
+		<dependency>
+			<groupId>com.monoxer.private</groupId>
+			<artifactId>mariaDB4j-db-mac64-arm64</artifactId>
+			<version>10.2.41</version>
 		</dependency>
 		<dependency>
 			<!-- For MariaDB4jSpringService, only. This has to be repeated from mariaDB4j-core here due to the optional true below -->
