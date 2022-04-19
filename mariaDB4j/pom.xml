@@ -34,6 +34,11 @@
 			<version>10.2.11</version>
 		</dependency>
 		<dependency>
+			<groupId>com.monoxer.private</groupId>
+			<artifactId>mariaDB4j-db-mac64-arm64</artifactId>
+			<version>10.2.41</version>
+		</dependency>
+		<dependency>
 			<!-- For MariaDB4jSpringService, only. This has to be repeated from mariaDB4j-core here due to the optional true below -->
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
