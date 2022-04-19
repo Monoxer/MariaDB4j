@@ -12,5 +12,5 @@
 
     <groupId>com.monoxer.private</groupId>
     <artifactId>mariaDB4j-db-mac64-arm64</artifactId>
-    <version>10.2.41-SNAPSHOT</version>
+    <version>10.2.41</version>
 </project>
