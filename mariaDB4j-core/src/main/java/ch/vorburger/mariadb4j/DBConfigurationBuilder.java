@@ -22,6 +22,7 @@ package ch.vorburger.mariadb4j;
 import ch.vorburger.exec.ManagedProcessListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +36,28 @@ public class DBConfigurationBuilder {
     protected static final String WIN32 = "win32";
     protected static final String LINUX = "linux";
     protected static final String OSX = "osx";
+    protected static final String OSX_ARM64 = "osx-arm64";
+
+    protected static boolean isUnderRosetta() {
+        try {
+            String[] cmd = { "sysctl", "-n", "sysctl.proc_translated" };
+            Runtime runtime = Runtime.getRuntime();
+            Process p = runtime.exec(cmd);
+            p.waitFor();
+            InputStream is = p.getInputStream();
+            return is.read() == '1';
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     private static final String DEFAULT_DATA_DIR = SystemUtils.JAVA_IO_TMPDIR + "/MariaDB4j/data";
 
     private String databaseVersion = null;
 
     // all these are just some defaults
-    protected String osDirectoryName = SystemUtils.IS_OS_WINDOWS ? WIN32
-            : SystemUtils.IS_OS_MAC ? OSX : LINUX;
+    protected String osDirectoryName = SystemUtils.IS_OS_WINDOWS ? WIN32 : SystemUtils.IS_OS_MAC
+            ? (isUnderRosetta() || System.getProperty("os.arch") == "aarch64" ? OSX_ARM64 : OSX) : LINUX;
     protected String baseDir = SystemUtils.JAVA_IO_TMPDIR + "/MariaDB4j/base";
     protected String libDir = null;
 
