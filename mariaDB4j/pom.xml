@@ -8,12 +8,13 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<groupId>com.monoxer.private</groupId>
 	<artifactId>mariaDB4j</artifactId>
     <name>mariaDB4j (all-in-one artifact)</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>com.monoxer.private</groupId>
 			<artifactId>mariaDB4j-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
