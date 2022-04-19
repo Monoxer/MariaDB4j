@@ -30,6 +30,7 @@ import ch.vorburger.exec.ManagedProcessListener;
 import ch.vorburger.mariadb4j.DBConfiguration.Executable;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,13 +47,28 @@ public class DBConfigurationBuilder {
     protected static final String WIN32 = "win32";
     protected static final String LINUX = "linux";
     protected static final String OSX = "osx";
+    protected static final String OSX_ARM64 = "osx-arm64";
+
+    protected static boolean isUnderRosetta() {
+        try {
+            String[] cmd = { "sysctl", "-n", "sysctl.proc_translated" };
+            Runtime runtime = Runtime.getRuntime();
+            Process p = runtime.exec(cmd);
+            p.waitFor();
+            InputStream is = p.getInputStream();
+            return is.read() == '1';
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     private static final String DEFAULT_DATA_DIR = SystemUtils.JAVA_IO_TMPDIR + "/MariaDB4j/data";
 
     private String databaseVersion = null;
 
     // all these are just some defaults
-    protected String osDirectoryName = SystemUtils.IS_OS_WINDOWS ? WIN32 : SystemUtils.IS_OS_MAC ? OSX : LINUX;
+    protected String osDirectoryName = SystemUtils.IS_OS_WINDOWS ? WIN32 : SystemUtils.IS_OS_MAC
+            ? (isUnderRosetta() || System.getProperty("os.arch") == "aarch64" ? OSX_ARM64 : OSX) : LINUX;
     protected String baseDir = SystemUtils.JAVA_IO_TMPDIR + "/MariaDB4j/base";
     protected String libDir = null;
 
@@ -269,7 +285,7 @@ public class DBConfigurationBuilder {
     protected String _getDatabaseVersion() {
         String databaseVersion = getDatabaseVersion();
         if (databaseVersion == null) {
-            if (!OSX.equals(getOS()) && !LINUX.equals(getOS()) && !WIN32.equals(getOS())) {
+            if (!OSX.equals(getOS()) && !OSX_ARM64.equals(getOS()) && !LINUX.equals(getOS()) && !WIN32.equals(getOS())) {
                 throw new IllegalStateException("OS not directly supported, please use setDatabaseVersion() to set the name "
                         + "of the package that the binaries are in, for: " + SystemUtils.OS_VERSION);
             }
